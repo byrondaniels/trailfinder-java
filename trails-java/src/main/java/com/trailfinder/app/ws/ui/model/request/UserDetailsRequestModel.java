@@ -2,10 +2,10 @@ package com.trailfinder.app.ws.ui.model.request;
 
 public class UserDetailsRequestModel {
 
-	private String name;
-	private String email;
-	private String password;
-	private String password2;
+	private String name = "";
+	private String email = "";
+	private String password = "";
+	private String password2 = "";
 	private String avatar;
 	private String date;
 

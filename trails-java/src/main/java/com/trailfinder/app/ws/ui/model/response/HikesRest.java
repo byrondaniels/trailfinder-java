@@ -1,62 +1,19 @@
-package com.trailfinder.app.ws.io.entity;
+package com.trailfinder.app.ws.ui.model.response;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import org.springframework.hateoas.ResourceSupport;
 
-@Entity(name = "hikes")
-public class HikesEntity implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2696178329246561673L;
-	
-	@Id
-	@GeneratedValue
-	private long id;
-	
-	@Column(nullable = false)
+public class HikesRest extends ResourceSupport {
 	private String hikeId;
-
-	@ManyToOne
-	@JoinColumn(name = "profiles_id")
-	private ProfileEntity profileDetails;
-
-	@Column(nullable = false)
 	private String name;
-
-	@Column(nullable = false)
 	private String location;
-
-	@Column
 	private String length;
-
-	@Column
 	private Date fromDate;
-
-	@Column
 	private Date toDate;
-
-	@Column
 	private String description;
-
-	@Column(nullable = false)
 	private String status;
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public String getHikeId() {
 		return hikeId;
@@ -64,14 +21,6 @@ public class HikesEntity implements Serializable {
 
 	public void setHikeId(String hikeId) {
 		this.hikeId = hikeId;
-	}
-
-	public ProfileEntity getProfileDetails() {
-		return profileDetails;
-	}
-
-	public void setProfileDetails(ProfileEntity profile) {
-		this.profileDetails = profile;
 	}
 
 	public String getName() {

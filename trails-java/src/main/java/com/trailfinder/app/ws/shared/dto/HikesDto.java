@@ -1,55 +1,25 @@
-package com.trailfinder.app.ws.io.entity;
+package com.trailfinder.app.ws.shared.dto;
 
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-@Entity(name = "hikes")
-public class HikesEntity implements Serializable {
+public class HikesDto implements Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2696178329246561673L;
-	
-	@Id
-	@GeneratedValue
+	private static final long serialVersionUID = 4919661524620779719L;
 	private long id;
-	
-	@Column(nullable = false)
 	private String hikeId;
-
-	@ManyToOne
-	@JoinColumn(name = "profiles_id")
-	private ProfileEntity profileDetails;
-
-	@Column(nullable = false)
 	private String name;
-
-	@Column(nullable = false)
 	private String location;
-
-	@Column
 	private String length;
-
-	@Column
 	private Date fromDate;
-
-	@Column
 	private Date toDate;
-
-	@Column
 	private String description;
-
-	@Column(nullable = false)
 	private String status;
-
+	private ProfileDto profileDetails;
+	
 	public long getId() {
 		return id;
 	}
@@ -64,14 +34,6 @@ public class HikesEntity implements Serializable {
 
 	public void setHikeId(String hikeId) {
 		this.hikeId = hikeId;
-	}
-
-	public ProfileEntity getProfileDetails() {
-		return profileDetails;
-	}
-
-	public void setProfileDetails(ProfileEntity profile) {
-		this.profileDetails = profile;
 	}
 
 	public String getName() {
@@ -128,6 +90,14 @@ public class HikesEntity implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public ProfileDto getProfileDetails() {
+		return profileDetails;
+	}
+
+	public void setProfileDetails(ProfileDto profileDetails) {
+		this.profileDetails = profileDetails;
 	}
 
 }

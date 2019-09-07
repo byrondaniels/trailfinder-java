@@ -27,6 +27,9 @@ public class HPHikesEntity implements Serializable {
 
 	@Column(nullable = false)
 	private String hikeData;
+	
+	@Column(nullable = false)
+	private String hPHikeId;
 
 	public long getId() {
 		return id;
@@ -50,6 +53,18 @@ public class HPHikesEntity implements Serializable {
 
 	public void setHikeData(String hikeData) {
 		this.hikeData = hikeData;
+	}
+
+	public String gethPHikeId() {
+		return hPHikeId;
+	}
+
+	public void sethPHikeId(String hPHikeId) {
+		this.hPHikeId = hPHikeId;
+	}
+
+	public void setProfileDetails(ProfileEntity profileDetails) {
+		this.profileDetails = profileDetails;
 	}
 
 }

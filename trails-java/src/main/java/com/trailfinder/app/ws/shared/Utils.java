@@ -20,7 +20,7 @@ public class Utils {
 	      return result.matches();
 	}
 	
-	public String generateUserId(int length) {
+	public String generateId(int length) {
 		return generateRandomString(length);
 	}
 	
@@ -30,6 +30,7 @@ public class Utils {
 		for(int i=0; i<length; i++) {
 			returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
 		}
+		
 		return new String(returnValue);
 	}
 }

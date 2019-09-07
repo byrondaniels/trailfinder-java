@@ -9,7 +9,7 @@ public class SecurityConstants {
 	// Will need to review this. In MERN project I use ---> x-auth-token
 	public static final String HEADER_STRING = "Authorization";
 	public static final String SIGN_UP_URL = "/users";
-	public static final String TOKEN_SECRET = "cheese";
+	public static final String TOKEN_SECRET = "121ij12i1jsa";
 
 	public static String getTokenSecret() {
 		AppProperties appProperties = (AppProperties) SpringApplicationContext.getBean("AppProperties");

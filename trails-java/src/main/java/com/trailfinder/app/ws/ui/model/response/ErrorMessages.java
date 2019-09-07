@@ -7,12 +7,14 @@ public enum ErrorMessages {
 	INTERNAL_SERVER_ERROR("Internal server error"),
 	NO_RECORD_FOUND("Record with provided id is not found"), 
 	AUTHENTICATION_FAILED("Authentication failed"),
+	COULD_NOT_FIND_PROFILE("Could not find profile in database"), 
 	COULD_NOT_UPDATE_RECORD("Could not update record"), 
 	COULD_NOT_DELETE_RECORD("Could not delete record"),
 	EMAIL_ADDRESS_NOT_VERIFIED("Email address could not be verified"),
 	PASSWORDS_DONT_MATCH("Confirmation password does not match original"),
 	PASSWORD_INVALID_LENGTH("Password is not > 6 characters"),
-	INVALID_ENTRY_EMAIL("Email address is not a valid email");
+	INVALID_ENTRY_EMAIL("Email address is not a valid email"),
+	PROFILE_ALREADY_CREATED("A profile has already been created for this user");
 
 	private String errorMessage;
 

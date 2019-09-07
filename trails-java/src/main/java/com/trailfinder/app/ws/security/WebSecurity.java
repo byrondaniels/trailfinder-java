@@ -19,7 +19,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	public WebSecurity(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.userService= userService;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-		
 	}
 	
 	@Override

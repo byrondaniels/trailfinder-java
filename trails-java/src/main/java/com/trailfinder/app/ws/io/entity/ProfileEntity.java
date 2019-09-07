@@ -9,8 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.OneToMany;
 
 @Entity(name = "profiles")
@@ -24,10 +22,12 @@ public class ProfileEntity implements Serializable {
 	@Id // Marker for primary key
 	@GeneratedValue
 	private long id;
+	
+	@Column(unique=true)
+	private String profileId;
 
-	@OneToOne
-	@JoinColumn(name = "users_id")
-	private UserEntity user;
+	@Column(unique=true)
+	private String user;
 
 	@Column
 	private String blog;
@@ -46,6 +46,21 @@ public class ProfileEntity implements Serializable {
 
 	@Column
 	private String externalImg;
+	
+	@Column(length = 70)
+	private String youtube;
+
+	@Column(length = 70)
+	private String twitter;
+
+	@Column(length = 70)
+	private String facebook;
+
+	@Column(length = 70)
+	private String linkedin;
+
+	@Column(length = 70)
+	private String instagram;
 
 	@OneToMany(mappedBy = "profileDetails", cascade = CascadeType.ALL)
 	private List<HPHikesEntity> hPHikes;
@@ -55,9 +70,6 @@ public class ProfileEntity implements Serializable {
 
 	@OneToMany(mappedBy = "profileDetails", cascade = CascadeType.ALL)
 	private List<CoursesEntity> courses;
-
-	@OneToMany(mappedBy = "profileDetails", cascade = CascadeType.ALL)
-	private List<SocialEntity> social;
 
 	@Column
 	private Date date;
@@ -70,11 +82,11 @@ public class ProfileEntity implements Serializable {
 		this.id = id;
 	}
 
-	public UserEntity getUser() {
+	public String getUser() {
 		return user;
 	}
 
-	public void setUser(UserEntity user) {
+	public void setUser(String user) {
 		this.user = user;
 	}
 
@@ -150,12 +162,44 @@ public class ProfileEntity implements Serializable {
 		this.courses = courses;
 	}
 
-	public List<SocialEntity> getSocial() {
-		return social;
+	public String getYoutube() {
+		return youtube;
 	}
 
-	public void setSocial(List<SocialEntity> social) {
-		this.social = social;
+	public void setYoutube(String youtube) {
+		this.youtube = youtube;
+	}
+
+	public String getTwitter() {
+		return twitter;
+	}
+
+	public void setTwitter(String twitter) {
+		this.twitter = twitter;
+	}
+
+	public String getFacebook() {
+		return facebook;
+	}
+
+	public void setFacebook(String facebook) {
+		this.facebook = facebook;
+	}
+
+	public String getLinkedin() {
+		return linkedin;
+	}
+
+	public void setLinkedin(String linkedin) {
+		this.linkedin = linkedin;
+	}
+
+	public String getInstagram() {
+		return instagram;
+	}
+
+	public void setInstagram(String instagram) {
+		this.instagram = instagram;
 	}
 
 	public Date getDate() {
@@ -165,5 +209,15 @@ public class ProfileEntity implements Serializable {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+
+	public String getProfileId() {
+		return profileId;
+	}
+
+	public void setProfileId(String profileId) {
+		this.profileId = profileId;
+	}
+	
+	
 
 }
