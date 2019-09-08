@@ -17,7 +17,7 @@ import com.trailfinder.app.ws.shared.dto.HikesDto;
 import com.trailfinder.app.ws.ui.model.response.ErrorMessages;
 
 @Service
-public class HikeServiceImpl implements HikeService {
+public class ProfileHelperServiceImpl implements ProfileHelperService<HikesDto> {
 
 	@Autowired
 	ProfileRepository profileRepository;
@@ -26,7 +26,7 @@ public class HikeServiceImpl implements HikeService {
 	HikesRepository hikesRepository;
 	
 	@Override
-	public List<HikesDto> getHikes(String userId) {
+	public List<HikesDto> getItems(String userId) {
 		
         List<HikesDto> returnValue = new ArrayList<>();
         ModelMapper modelMapper = new ModelMapper();
@@ -46,7 +46,7 @@ public class HikeServiceImpl implements HikeService {
 	}
 
 	@Override
-	public HikesDto getHike(String hikeId) {
+	public HikesDto getItem(String hikeId) {
 		
 		HikesDto returnValue = null;
 
@@ -62,7 +62,7 @@ public class HikeServiceImpl implements HikeService {
 	
 	@Transactional
 	@Override
-	public void deleteHike(String hikeId) {
+	public void deleteItem(String hikeId) {
 		
 		HikesEntity hikeEntity = hikesRepository.findByHikeId(hikeId);
 

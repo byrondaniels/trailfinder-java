@@ -31,7 +31,7 @@ import com.trailfinder.app.ws.io.entity.UserEntity;
 import com.trailfinder.app.ws.io.repositories.HikesRepository;
 import com.trailfinder.app.ws.io.repositories.ProfileRepository;
 import com.trailfinder.app.ws.io.repositories.UserRepository;
-import com.trailfinder.app.ws.service.HikeService;
+import com.trailfinder.app.ws.service.HikesService;
 import com.trailfinder.app.ws.service.ProfileService;
 import com.trailfinder.app.ws.shared.Utils;
 import com.trailfinder.app.ws.shared.dto.HikesDto;
@@ -61,7 +61,7 @@ public class ProfileController {
 	ProfileService profileService;
 
 	@Autowired
-	HikeService hikeService;
+	HikesService hikeService;
 
 	@Autowired
 	UserRepository userRepository;
@@ -271,7 +271,7 @@ public class ProfileController {
 
 		ModelMapper modelMapper = new ModelMapper();
 		
-		HikesDto hikesDto = hikeService.getHike(hikeId);
+		HikesDto hikesDto = hikeService.getItem(hikeId);
 
 		Link hikeLink = linkTo(methodOn(ProfileController.class).getHikeByProfile(profileId, hikeId)).withSelfRel();
 		Link profileLink = linkTo(UserController.class).slash(profileId).withRel("profile");
@@ -294,7 +294,7 @@ public class ProfileController {
 		OperationStatusModel returnValue = new OperationStatusModel();
 		returnValue.setOperationName(RequestOperationName.DELETE.name());
 
-		hikeService.deleteHike(hikeId);
+		hikeService.deleteItem(hikeId);
 
 		returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
 		return returnValue;
