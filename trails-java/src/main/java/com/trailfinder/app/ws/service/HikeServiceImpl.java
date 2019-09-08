@@ -31,7 +31,7 @@ public class HikeServiceImpl implements HikeService {
         List<HikesDto> returnValue = new ArrayList<>();
         ModelMapper modelMapper = new ModelMapper();
         
-        ProfileEntity profileEntity = profileRepository.findByUser(userId).get(0);
+        ProfileEntity profileEntity = profileRepository.findByUser(userId);
 
 		if (profileEntity == null)
 			throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());

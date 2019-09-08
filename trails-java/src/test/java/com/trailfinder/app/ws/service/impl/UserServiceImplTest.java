@@ -10,7 +10,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -51,7 +50,7 @@ class UserServiceImplTest {
 		
 		userEntity = new UserEntity();
 		userEntity.setName("Bill");
-		userEntity.setEmail("test@test.com");
+		userEntity.setEmail("test1234@test.com");
 		userEntity.setId(1L);
 		userEntity.setUserId(userId);
 		userEntity.setEncryptedPassword(encryptedPassword);
@@ -65,7 +64,7 @@ class UserServiceImplTest {
 		UserDto userDto = userService.getUser("test@test.com");
 
 		assertNotNull(userDto);
-		assertEquals("Joey Beans", userDto.getName());
+		assertEquals("Bill", userDto.getName());
 
 	}
 
@@ -87,8 +86,10 @@ class UserServiceImplTest {
 		when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
 		UserDto userDto = new UserDto();
 		userDto.setName("Bill");
-		userDto.setPassword("12345678");
-		userDto.setEmail("test@test.com");
+		userDto.setPassword("123456781");
+		userDto.setEmail("t0est9099@test.com");
+        userDto.setDate("2019-01-01");
+
  	
 		assertThrows(UserServiceException.class,
 

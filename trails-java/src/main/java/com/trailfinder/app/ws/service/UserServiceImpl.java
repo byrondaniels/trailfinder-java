@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		
-		UserEntity userEntity =userRepository.findByEmail(email);
+		UserEntity userEntity = userRepository.findByEmail(email);
 		if(userEntity ==null) throw new UsernameNotFoundException(email);
 		
 		return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(),new ArrayList<>());
@@ -100,4 +100,13 @@ public class UserServiceImpl implements UserService {
 		userRepository.delete(userEntity);
 	}
 
+	@Override
+	public String getUserIdFromEmail(String email) {
+		
+		UserEntity loggedUser = userRepository.findByEmail(email);
+		String userId =loggedUser.getUserId();
+
+		return userId;
+	}
+	
 }

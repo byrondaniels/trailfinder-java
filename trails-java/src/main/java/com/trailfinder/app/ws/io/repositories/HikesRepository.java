@@ -17,4 +17,5 @@ public interface HikesRepository extends CrudRepository<HikesEntity, Long> {
 	
     @Override
     List<HikesEntity> findAll();
+    
 }

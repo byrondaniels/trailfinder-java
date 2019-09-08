@@ -2,6 +2,8 @@ package com.trailfinder.app.ws.io.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,17 +28,17 @@ class UserRepositoryTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		
-		if(!recordsCreated) createRecrods();
+		if(!recordsCreated) createRecords();
 	}
 
 	
 	@Test 
 	final void testFindUsersByKeyword()
 	{
-		String keyword="erg";
+		String keyword="yro";
 		List<UserEntity> users = userRepository.findUsersByKeyword(keyword);
 		assertNotNull(users);
-		assertTrue(users.size() == 2);
+		assertTrue(users.size() >= 2);
 		
 		UserEntity user = users.get(0);
 		assertTrue( user.getName().contains(keyword) || 
@@ -48,54 +50,37 @@ class UserRepositoryTest {
 	@Test 
 	final void testFindUserEntityByUserId()
 	{
-		String userId = "1a2b3c";
+		String userId = "1a2b3ccc";
 		UserEntity userEntity = userRepository.findUserEntityByUserId(userId);
 		
 		assertNotNull(userEntity);
 		assertTrue(userEntity.getUserId().equals(userId));
 	}
 	
-	@Test
-	final void testGetUserEntityFullNameById()
+	
+	private void createRecords()
 	{
-		String userId = "1a2b3c";
-		List<Object[]> records =  userRepository.getUserEntityNameById(userId);
+        Timestamp ts=new Timestamp(System.currentTimeMillis());  
 		
-        assertNotNull(records);
-        assertTrue(records.size() == 1);
-        
-        Object[] userDetails = records.get(0);
-      
-        String firstName = String.valueOf(userDetails[0]);
-        String lastName = String.valueOf(userDetails[1]);
-
-        assertNotNull(firstName);
-        assertNotNull(lastName);
-	}
-	
-	
-	private void createRecrods()
-	{
 		// Prepare User Entity
 	     UserEntity userEntity = new UserEntity();
 	     userEntity.setName("Byron Daniels");
-	     userEntity.setUserId("1a2b3c");
-	     userEntity.setEncryptedPassword("xxx");
-	     userEntity.setEmail("test@test.com");
+	     userEntity.setUserId("1a2b3ccc");
+	     userEntity.setEncryptedPassword("xaxazazx");
+	     userEntity.setEmail("atesat696k9@test.com");
+	     userEntity.setDate(new Date(ts.getTime()));
 	     
 	     
 	     userRepository.save(userEntity);
-	     
-	     
 	     
 	     
 			// Prepare User Entity
 	     UserEntity userEntity2 = new UserEntity();
 	     userEntity2.setName("Joe Daniels");
 	     userEntity2.setUserId("1a2b3cddddd");
-	     userEntity2.setEncryptedPassword("xxx");
-	     userEntity2.setEmail("test@test.com");
-	     
+	     userEntity2.setEncryptedPassword("zxxazazax");
+	     userEntity2.setEmail("ateast65o63@test.com");
+	     userEntity2.setDate(new Date(ts.getTime()));
 	     
 	     userRepository.save(userEntity2);
 	     

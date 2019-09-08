@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.trailfinder.app.ws.exceptions.UserServiceException;
@@ -27,6 +28,9 @@ public class ProfileServiceImpl implements ProfileService {
 	
 	@Autowired
 	Utils utils;
+	
+	@Autowired
+	UserServiceImpl userService;
 	
 	@Autowired
 	ProfileRepository profileRepository;
@@ -73,7 +77,7 @@ public class ProfileServiceImpl implements ProfileService {
         List<HikesDto> returnValue = new ArrayList<>();
         ModelMapper modelMapper = new ModelMapper();
         
-        ProfileEntity profileEntity = profileRepository.findByUser(userId).get(0);
+        ProfileEntity profileEntity = profileRepository.findByUser(userId);
         
         if(profileEntity==null) {
 			throw new UserServiceException(ErrorMessages.COULD_NOT_FIND_PROFILE.getErrorMessage());
@@ -97,14 +101,15 @@ public class ProfileServiceImpl implements ProfileService {
 		if (profileDetails.getLocation().isEmpty() || profileDetails.getSkills().isEmpty()) {
 			throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
 		}
-
-		UserEntity loggedUser = userRepository.findByEmail(loggedUserName);
-		Integer found = profileRepository.findByUser(loggedUser.getUserId()).size();
 		
-		if (found > 0)
+		String userId = userService.getUserIdFromEmail(loggedUserName);
+
+		ProfileEntity found = profileRepository.findByUser(userId);
+		
+		if (found != null)
 			throw new UserServiceException(ErrorMessages.PROFILE_ALREADY_CREATED.getErrorMessage());
 
-		profileDetails.setUser(loggedUser.getUserId());
+		profileDetails.setUser(userId);
 		profileDetails.setProfileId(utils.generateId(30));
 		ProfileEntity profileEntity = modelMapper.map(profileDetails, ProfileEntity.class);
 		ProfileEntity createdProfile = profileRepository.save(profileEntity);
@@ -117,7 +122,7 @@ public class ProfileServiceImpl implements ProfileService {
 	public ProfileDto updateProfile(ProfileDto profile, String loggedUserName) {
 		
 		UserEntity loggedUser = userRepository.findByEmail(loggedUserName);
-		ProfileEntity currentProfile = profileRepository.findByUser(loggedUser.getUserId()).get(0);
+		ProfileEntity currentProfile = profileRepository.findByUser(loggedUser.getUserId());
 		
 		if (currentProfile == null)
 			throw new UserServiceException(ErrorMessages.COULD_NOT_FIND_PROFILE.getErrorMessage());
@@ -148,6 +153,21 @@ public class ProfileServiceImpl implements ProfileService {
 		ProfileEntity updatedProfileDetails = profileRepository.save(currentProfile);
 		
 		ProfileDto returnValue = new ModelMapper().map(updatedProfileDetails, ProfileDto.class);
+		return returnValue;
+	}
+
+	@Override
+	public ProfileDto getProfileByUser(String user) {
+		
+		ModelMapper modelMapper = new ModelMapper();
+		
+		ProfileEntity profileEntity = profileRepository.findByUser(user);
+		
+		if(profileEntity == null) 
+			throw new UsernameNotFoundException("Profile with UserId: "+user+" cannot be found");
+		
+		ProfileDto returnValue =modelMapper.map(profileEntity, ProfileDto.class);
+		
 		return returnValue;
 	}
 	

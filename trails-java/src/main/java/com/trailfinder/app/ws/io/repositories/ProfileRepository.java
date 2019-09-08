@@ -9,12 +9,13 @@ import com.trailfinder.app.ws.io.entity.ProfileEntity;
 
 
 public interface ProfileRepository extends CrudRepository<ProfileEntity,Long> {
-	List<ProfileEntity> findByUser(String id);
 	
 	@Transactional
 	void deleteByUser(String id);
 	
     @Override
     List<ProfileEntity> findAll();
+    
+	ProfileEntity findByUser(String userId);
     
 }

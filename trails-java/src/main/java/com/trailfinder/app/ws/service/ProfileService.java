@@ -17,6 +17,8 @@ public interface ProfileService {
 	
 	ProfileDto updateProfileByHPHike(ProfileDto profileDto,HikesHPRequestModel hikeDetails );
 	
+	ProfileDto getProfileByUser(String user);
+	
 	public List<HikesDto> getHikesByUser(String userId);
 
 }

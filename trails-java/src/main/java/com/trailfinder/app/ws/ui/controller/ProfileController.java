@@ -114,7 +114,7 @@ public class ProfileController {
 		ModelMapper modelMapper = new ModelMapper();
 
 		UserEntity loggedUser = userRepository.findByEmail(authentication.getName());
-		ProfileEntity currentProfile = profileRepository.findByUser(loggedUser.getUserId()).get(0);
+		ProfileEntity currentProfile = profileRepository.findByUser(loggedUser.getUserId());
 
 		returnValue = modelMapper.map(currentProfile, ProfileRest.class);
 
@@ -129,12 +129,12 @@ public class ProfileController {
 		ProfileRest returnValue = new ProfileRest();
 		ModelMapper modelMapper = new ModelMapper();
 
-		List<ProfileEntity> profile = profileRepository.findByUser(userId);
+		ProfileEntity profile = profileRepository.findByUser(userId);
 
-		if (profile.size() != 1)
+		if (profile == null)
 			throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
 
-		returnValue = modelMapper.map(profile.get(0), ProfileRest.class);
+		returnValue = modelMapper.map(profile, ProfileRest.class);
 
 		return returnValue;
 	}
@@ -181,7 +181,7 @@ public class ProfileController {
 		ProfileDto profileDto = new ProfileDto();
 
 		UserEntity loggedUser = userRepository.findByEmail((String) authentication.getName());
-		ProfileEntity currentProfile = profileRepository.findByUser(loggedUser.getUserId()).get(0);
+		ProfileEntity currentProfile = profileRepository.findByUser(loggedUser.getUserId());
 
 		profileDto = modelMapper.map(currentProfile, ProfileDto.class);
 		ProfileDto updatedProfile = profileService.updateProfileByHike(profileDto, hikeDetails);
@@ -264,7 +264,7 @@ public class ProfileController {
 	}
 	// end of method
 
-	// The below method gets a hike based on profile id
+	// The below method gets a hike based on profile id & hike id
 	@GetMapping(path = "/{profileId}/hikes/{hikeId}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE, "application/hal+json" })
 	public Resource<HikesRest> getHikeByProfile(@PathVariable String profileId, @PathVariable String hikeId) {
@@ -300,7 +300,7 @@ public class ProfileController {
 		return returnValue;
 	}
 
-	// Used to add a hike from HikeProject API to users profile
+	// Used to add a hike from HikeProject API call (client side call) to users profile
 	@PutMapping(path = "/APIhikes", consumes = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE })
@@ -311,7 +311,7 @@ public class ProfileController {
 		ProfileDto profileDto = new ProfileDto();
 
 		UserEntity loggedUser = userRepository.findByEmail((String) authentication.getName());
-		ProfileEntity currentProfile = profileRepository.findByUser(loggedUser.getUserId()).get(0);
+		ProfileEntity currentProfile = profileRepository.findByUser(loggedUser.getUserId());
 		profileDto = modelMapper.map(currentProfile, ProfileDto.class);
 		ProfileDto updatedProfile = profileService.updateProfileByHPHike(profileDto, hikeDetails);
 		returnValue = modelMapper.map(updatedProfile, ProfileRest.class);
@@ -347,7 +347,7 @@ public class ProfileController {
 	@GetMapping(path = "/unsplash/{subject}", produces = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE })
 	public UnsplashRest getUnsplashBySubject() {
-		// I will need to figure out how to make an api call to unsplash...
+		// This will require making an API call to unsplash from a subject keyword
 		return null;
 	}
 
