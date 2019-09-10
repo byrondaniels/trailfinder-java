@@ -61,7 +61,7 @@ public class ProfileController {
 	ProfileService profileService;
 
 	@Autowired
-	HikeService hikeService;
+	HikeServiceImpl hikeService;
 
 	@Autowired
 	UserRepository userRepository;
@@ -277,13 +277,13 @@ public class ProfileController {
 		Link profileLink = linkTo(UserController.class).slash(profileId).withRel("profile");
 		Link hikesLink = linkTo(methodOn(ProfileController.class).getHikesByProfile(profileId)).withRel("hikes");
 
-		HikesRest addressesRestModel = modelMapper.map(hikesDto, HikesRest.class);
+		HikesRest hikesRestModel = modelMapper.map(hikesDto, HikesRest.class);
 
-		addressesRestModel.add(hikeLink);
-		addressesRestModel.add(profileLink);
-		addressesRestModel.add(hikesLink);
+		hikesRestModel.add(hikeLink);
+		hikesRestModel.add(profileLink);
+		hikesRestModel.add(hikesLink);
 
-		return new Resource<>(addressesRestModel);
+		return new Resource<>(hikesRestModel);
 	}
 
 	// The following is used to delete hike from user profile

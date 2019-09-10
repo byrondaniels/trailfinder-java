@@ -9,8 +9,8 @@ public interface HikeService {
 	
 	List<HikesDto> getHikes(String userId);
 	
-	HikesDto getHike(String addressId);
+	HikesDto getHike(String hikeId);
 	
-	void deleteHike(String addressId);
+	void deleteHike(String hikeId);
 	
 }

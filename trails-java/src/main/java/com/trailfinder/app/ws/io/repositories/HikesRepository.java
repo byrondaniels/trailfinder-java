@@ -13,7 +13,7 @@ public interface HikesRepository extends CrudRepository<HikesEntity, Long> {
 	
 	List<HikesEntity> findAllByProfileDetails(ProfileEntity profileEntity);
 	
-	HikesEntity findByHikeId(String addressId);
+	HikesEntity findByHikeId(String hikeId);
 	
     @Override
     List<HikesEntity> findAll();
