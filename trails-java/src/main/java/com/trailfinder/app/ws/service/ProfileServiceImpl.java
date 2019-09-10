@@ -9,9 +9,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.trailfinder.app.ws.exceptions.UserServiceException;
+import com.trailfinder.app.ws.io.entity.HPHikesEntity;
 import com.trailfinder.app.ws.io.entity.HikesEntity;
 import com.trailfinder.app.ws.io.entity.ProfileEntity;
 import com.trailfinder.app.ws.io.entity.UserEntity;
+import com.trailfinder.app.ws.io.repositories.HPHikesRepository;
 import com.trailfinder.app.ws.io.repositories.HikesRepository;
 import com.trailfinder.app.ws.io.repositories.ProfileRepository;
 import com.trailfinder.app.ws.io.repositories.UserRepository;
@@ -40,6 +42,9 @@ public class ProfileServiceImpl implements ProfileService {
 	
 	@Autowired
 	HikesRepository hikesRepository;
+	
+	@Autowired
+	HPHikesRepository hPHikesRepository;
 
 	public ProfileDto updateProfileByHike(ProfileDto currentProfile, HikesRequestModel hikeDetails) {
 		ModelMapper modelMapper = new ModelMapper();
@@ -169,6 +174,29 @@ public class ProfileServiceImpl implements ProfileService {
 		ProfileDto returnValue =modelMapper.map(profileEntity, ProfileDto.class);
 		
 		return returnValue;
+	}
+
+	
+	@Override
+	public List<HikesHPDto> getHPHikesByUser(String userId){
+        List<HikesHPDto> returnValue = new ArrayList<>();
+        ModelMapper modelMapper = new ModelMapper();
+        
+        ProfileEntity profileEntity = profileRepository.findByUser(userId);
+        
+        if(profileEntity==null) {
+			throw new UserServiceException(ErrorMessages.COULD_NOT_FIND_PROFILE.getErrorMessage());
+		}
+ 
+        Iterable<HPHikesEntity> hikes = hPHikesRepository.findAllByProfileDetails(profileEntity);
+        
+        if(hikes==null) return returnValue;
+        
+        for(HPHikesEntity hikesEntity:hikes){
+            returnValue.add( modelMapper.map(hikesEntity, HikesHPDto.class) );
+        }
+        
+        return returnValue;
 	}
 	
 }

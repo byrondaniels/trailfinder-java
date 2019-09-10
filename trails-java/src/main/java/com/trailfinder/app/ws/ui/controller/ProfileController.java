@@ -31,15 +31,18 @@ import com.trailfinder.app.ws.io.entity.UserEntity;
 import com.trailfinder.app.ws.io.repositories.HikesRepository;
 import com.trailfinder.app.ws.io.repositories.ProfileRepository;
 import com.trailfinder.app.ws.io.repositories.UserRepository;
-import com.trailfinder.app.ws.service.HikeService;
+import com.trailfinder.app.ws.service.HikesHPServiceImpl;
+import com.trailfinder.app.ws.service.HikesServiceImpl;
 import com.trailfinder.app.ws.service.ProfileService;
 import com.trailfinder.app.ws.shared.Utils;
 import com.trailfinder.app.ws.shared.dto.HikesDto;
+import com.trailfinder.app.ws.shared.dto.HikesHPDto;
 import com.trailfinder.app.ws.shared.dto.ProfileDto;
 import com.trailfinder.app.ws.ui.model.request.HikesHPRequestModel;
 import com.trailfinder.app.ws.ui.model.request.HikesRequestModel;
 import com.trailfinder.app.ws.ui.model.request.ProfileDetailsRequestModel;
 import com.trailfinder.app.ws.ui.model.response.ErrorMessages;
+import com.trailfinder.app.ws.ui.model.response.HikesHPRest;
 import com.trailfinder.app.ws.ui.model.response.HikesRest;
 import com.trailfinder.app.ws.ui.model.response.OperationStatusModel;
 import com.trailfinder.app.ws.ui.model.response.ProfileRest;
@@ -61,7 +64,10 @@ public class ProfileController {
 	ProfileService profileService;
 
 	@Autowired
-	HikeService hikeService;
+	HikesServiceImpl hikeService;
+	
+	@Autowired
+	HikesHPServiceImpl hikeHPService;
 
 	@Autowired
 	UserRepository userRepository;
@@ -250,19 +256,6 @@ public class ProfileController {
 		return new Resources<>(hikesListRestModel);
 	}
 
-	// The below method is for testing and not needed for production
-	@GetMapping(path = "/hikes/all", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-	public List<HikesRest> getAllHikes() {
-
-		List<HikesRest> returnValue = new ArrayList<>();
-		List<HikesEntity> hikes = hikesRepository.findAll();
-
-		Type listType = new TypeToken<List<HikesRest>>() {}.getType();
-		returnValue = new ModelMapper().map(hikes, listType);
-
-		return returnValue;
-	}
-	// end of method
 
 	// The below method gets a hike based on profile id & hike id
 	@GetMapping(path = "/{profileId}/hikes/{hikeId}", produces = { MediaType.APPLICATION_JSON_VALUE,
@@ -271,19 +264,19 @@ public class ProfileController {
 
 		ModelMapper modelMapper = new ModelMapper();
 		
-		HikesDto hikesDto = hikeService.getHike(hikeId);
+		HikesDto hikesDto = hikeService.getItem(hikeId);
 
 		Link hikeLink = linkTo(methodOn(ProfileController.class).getHikeByProfile(profileId, hikeId)).withSelfRel();
 		Link profileLink = linkTo(UserController.class).slash(profileId).withRel("profile");
 		Link hikesLink = linkTo(methodOn(ProfileController.class).getHikesByProfile(profileId)).withRel("hikes");
 
-		HikesRest addressesRestModel = modelMapper.map(hikesDto, HikesRest.class);
+		HikesRest hikesRestModel = modelMapper.map(hikesDto, HikesRest.class);
 
-		addressesRestModel.add(hikeLink);
-		addressesRestModel.add(profileLink);
-		addressesRestModel.add(hikesLink);
+		hikesRestModel.add(hikeLink);
+		hikesRestModel.add(profileLink);
+		hikesRestModel.add(hikesLink);
 
-		return new Resource<>(addressesRestModel);
+		return new Resource<>(hikesRestModel);
 	}
 
 	// The following is used to delete hike from user profile
@@ -294,7 +287,7 @@ public class ProfileController {
 		OperationStatusModel returnValue = new OperationStatusModel();
 		returnValue.setOperationName(RequestOperationName.DELETE.name());
 
-		hikeService.deleteHike(hikeId);
+		hikeService.deleteItem(hikeId);
 
 		returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
 		return returnValue;
@@ -318,13 +311,70 @@ public class ProfileController {
 
 		return returnValue;
 	}
+	
+	// Get Hiking project hikes by profileId
+	@GetMapping(path = "/hikesHP", produces = { MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_JSON_VALUE })
+	public Resources<HikesHPRest> getHPHikesByProfile(@RequestBody String profileId) {
 
-	@DeleteMapping(path = "/APIhikes/{hike_id}", produces = { MediaType.APPLICATION_XML_VALUE,
+		List<HikesHPRest> hikesListRestModel = new ArrayList<>();
+		ModelMapper modelMapper = new ModelMapper();
+
+		List<HikesHPDto> hikesHPDto = profileService.getHPHikesByUser(profileId);
+
+		if (hikesHPDto != null && !hikesHPDto.isEmpty()) {
+			Type listType = new TypeToken<List<HikesRest>>() {}.getType();
+			hikesListRestModel = modelMapper.map(hikesHPDto, listType);
+
+			for (HikesHPRest hikesHPRest : hikesListRestModel) {
+				Link hikeLink = linkTo(methodOn(ProfileController.class)
+						.getHikeByProfile(profileId, hikesHPRest.getHikeHPId()))
+						.withSelfRel();
+				hikesHPRest.add(hikeLink);
+
+				Link profileLink = linkTo(methodOn(ProfileController.class)
+						.getProfile(profileId))
+						.withRel("profile");
+				hikesHPRest.add(profileLink);
+			}
+		}
+		return new Resources<>(hikesListRestModel);
+	}
+	
+	// The below method gets a hike based on profile id & hike id
+	@GetMapping(path = "/{profileId}/hikesHP/{hikeId}", produces = { MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_XML_VALUE, "application/hal+json" })
+	public Resource<HikesHPRest> getHPHikeByProfile(@PathVariable String profileId, @PathVariable String hikeId) {
+
+		ModelMapper modelMapper = new ModelMapper();
+		
+		HikesHPDto hikesHPDto = hikeHPService.getItem(hikeId);
+
+		Link hikeLink = linkTo(methodOn(ProfileController.class).getHPHikeByProfile(profileId, hikeId)).withSelfRel();
+		Link profileLink = linkTo(UserController.class).slash(profileId).withRel("profile");
+		Link hikesLink = linkTo(methodOn(ProfileController.class).getHPHikesByProfile(profileId)).withRel("hikes");
+
+		HikesHPRest hikesHPRestModel = modelMapper.map(hikesHPDto, HikesHPRest.class);
+
+		hikesHPRestModel.add(hikeLink);
+		hikesHPRestModel.add(profileLink);
+		hikesHPRestModel.add(hikesLink);
+
+		return new Resource<>(hikesHPRestModel);
+	}
+
+	@DeleteMapping(path = "/APIhikes/{hikeId}", produces = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE })
-	public ProfileRest deleteHPHikes() {
+	public OperationStatusModel deleteHPHikes(@PathVariable String hikeId) {
 		// Used to delete API hike from user profile
 
-		return null;
+		OperationStatusModel returnValue = new OperationStatusModel();
+		returnValue.setOperationName(RequestOperationName.DELETE.name());
+
+		hikeHPService.deleteItem(hikeId);
+
+		returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+		return returnValue;
 	}
 
 	@PutMapping(path = "/courses", consumes = { MediaType.APPLICATION_XML_VALUE,

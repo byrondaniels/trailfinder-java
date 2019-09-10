@@ -3,6 +3,7 @@ package com.trailfinder.app.ws.service;
 import java.util.List;
 
 import com.trailfinder.app.ws.shared.dto.HikesDto;
+import com.trailfinder.app.ws.shared.dto.HikesHPDto;
 import com.trailfinder.app.ws.shared.dto.ProfileDto;
 import com.trailfinder.app.ws.ui.model.request.HikesHPRequestModel;
 import com.trailfinder.app.ws.ui.model.request.HikesRequestModel;
@@ -19,7 +20,9 @@ public interface ProfileService {
 	
 	ProfileDto getProfileByUser(String user);
 	
-	public List<HikesDto> getHikesByUser(String userId);
+	List<HikesDto> getHikesByUser(String userId);
+	
+	List<HikesHPDto> getHPHikesByUser(String userId);
 
 }
 
